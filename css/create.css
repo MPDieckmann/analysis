@@ -1,0 +1,41 @@
+form.create-screen {
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+form.create-screen input,
+form.create-screen textarea,
+form.create-screen select {
+  padding: 0.25em;
+  border: 1px solid #888;
+  background: #fff;
+  margin: 0;
+  display: block;
+  flex: 1 1 auto;
+  width: 100%;
+  font: inherit;
+}
+
+form.create-screen input.title {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+form.create-screen textarea.text {
+  width: 100%;
+  box-sizing: border-box;
+  flex: 1 1 100%;
+  resize: none;
+}
+
+form.create-screen div.button-group {
+  display: flex;
+  flex-flow: row nowrap;
+  flex: 0 0 auto;
+}
+
+form.create-screen input.reset-button,
+form.create-screen input.create-button,
+form.create-screen select {
+  background: #eee;
+}

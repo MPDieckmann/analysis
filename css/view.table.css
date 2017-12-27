@@ -1,0 +1,30 @@
+table.view-screen {
+  width: auto;
+  height: auto;
+  border-collapse: collapse;
+}
+
+table.view-screen td {
+  border: 1px solid #888;
+  text-align: center;
+  box-sizing: border-box;
+  height: 1em;
+}
+
+table.view-screen tr.orig td {
+  border-top: 2px solid #000;
+  background: #eee;
+}
+
+table.view-screen tr.orig td.line-number {
+  font-size: 1em;
+  vertical-align: top;
+}
+
+table.view-screen tr.trans td {
+  background: #eee;
+}
+
+.hbo {
+  font-size: 1.25em;
+}

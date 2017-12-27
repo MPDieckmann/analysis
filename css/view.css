@@ -1,0 +1,108 @@
+section.view-screen {
+  display: grid;
+  overflow: auto;
+  text-align: center;
+  height: auto;
+}
+
+section.view-screen .line {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  border-left: 1px solid #888;
+  page-break-inside: avoid;
+  break-inside: avoid;
+  break-after: page;
+  page-break-after: always;
+}
+
+section.view-screen .line.analysis {
+  display: flex;
+  flex-flow: row nowrap;
+  padding-right: 2em;
+  position: relative;
+}
+
+section.view-screen .cell {
+  flex: 1 1 auto;
+  border-right: 1px solid #888;
+  border-top: 2px solid #000;
+  border-bottom: 1px solid #888;
+  box-sizing: border-box;
+  width: min-content;
+  min-width: 6em;
+  display: block;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+section.view-screen .cell .orig,
+section.view-screen .cell .analysis {
+  border-bottom: 1px solid #888;
+  min-height: 1em;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+section.view-screen .cell .trans {
+  min-height: 1em;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+section.view-screen .line.translation {
+  min-height: 1em;
+  border-right: 1px solid #888;
+}
+
+section.view-screen .cell.line-number,
+section.view-screen .cell .orig,
+section.view-screen .line.translation {
+  background: #eee;
+}
+
+section.view-screen .cell hr {
+  border: none;
+  border-bottom: 1px dashed #888;
+  margin: 0;
+}
+
+section.view-screen .cell hr.double {
+  border: none;
+  border-bottom: 3px double #888;
+  margin: 0;
+}
+
+section.view-screen .cell.line-number {
+  max-width: 2em;
+  width: 2em;
+  min-width: 0;
+  float: right;
+  position: absolute;
+  right: 0;
+  height: 100%;
+  border-bottom: none;
+  box-sizing: border-box;
+}
+
+@media print {
+  section.screen.view-screen {
+    display: flex;
+    flex-flow: row wrap;
+    overflow: auto;
+    width: 100%;
+  }
+  section.view-screen .line.analysis {
+    display: flex;
+    flex-flow: row wrap;
+  }
+}
+
+.hbo {
+  font-size: 1.25em;
+}
+
+@page {
+  margin: 0.5cm;
+  size: landscape;
+}
