@@ -8,7 +8,7 @@ var CreateScreen = (function () {
         }, options);
         this.element = document.createElement("form");
         this.element.classList.add("screen", "create-screen");
-        this.element.action = "view.html";
+        this.element.action = "index.html";
         this.element.method = "get";
         this.element.addEventListener("submit", function () {
             _this.$create();

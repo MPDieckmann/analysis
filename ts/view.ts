@@ -199,7 +199,7 @@ try {
   } else {
     var dialog = new SelectDialog({
       title: "Please select a title to view",
-      action: "view.html",
+      action: location.href,
       method: "get",
       dataList: JSON.parse(localStorage.getItem("analysis-titles") || "[]"),
       abortButton: "Create new",
