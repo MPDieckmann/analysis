@@ -1,3 +1,5 @@
+/// <reference path="../ts/interfaces.d.ts" />
+/// <reference path="../ts/edit.ts" />
 function htmlescapespe(input) {
     return input.replace(/\&/g, "&amp;").replace(/\</g, "&lt;").replace(/\>/g, "&gt;");
 }
@@ -11,22 +13,24 @@ function richtext(input) {
         .replace(/\*\(([^\)]+)\)/g, "<b>$1</b>")
         .replace(/\n/g, "<br/>"));
 }
-var ViewScreen = (function () {
-    function ViewScreen(title) {
-        var _this = this;
+class ViewScreen {
+    constructor(title) {
+        // #region initialize components
+        // initialize element
         this.element = document.createElement("section");
         this.element.classList.add("screen", "view-screen");
+        // #endregion
         document.title = title + " - Analysis";
         this.$title = title;
         this.$lines = JSON.parse(localStorage.getItem("analysis-" + title));
         var lineNumbers = Object.keys(this.$lines);
         this.element.dir = this.$lines.dir;
-        lineNumbers.forEach(function (lineNumber) { return !isNaN(parseInt(lineNumber)) && _this._createLine(_this.$lines[lineNumber], lineNumber); });
-        self.addEventListener("beforeunload", function () {
-            _this.save();
+        lineNumbers.forEach(lineNumber => !isNaN(parseInt(lineNumber)) && this._createLine(this.$lines[lineNumber], lineNumber));
+        self.addEventListener("beforeunload", () => {
+            this.save();
         });
     }
-    ViewScreen.prototype._createLine = function (line, lineNumber) {
+    _createLine(line, lineNumber) {
         var lineElement = document.createElement("div");
         lineElement.classList.add("line", "analysis");
         this.element.appendChild(lineElement);
@@ -41,7 +45,7 @@ var ViewScreen = (function () {
         line.orig.forEach(this._createWord, {
             editWord: this._editWord,
             lines: this.$lines,
-            lineElement: lineElement
+            lineElement
         });
         var translationLine = document.createElement("div");
         translationLine.dir = "ltr";
@@ -49,12 +53,12 @@ var ViewScreen = (function () {
         translationLine.textContent = line.trans;
         translationLine.classList.add("line", "translation");
         translationLine.addEventListener("click", this._editTranslation.bind({
-            line: line,
-            translationLine: translationLine
+            line,
+            translationLine
         }));
         this.element.appendChild(translationLine);
-    };
-    ViewScreen.prototype._createWord = function (record) {
+    }
+    _createWord(record) {
         var cell = document.createElement("div");
         cell.classList.add("cell");
         this.lineElement.appendChild(cell);
@@ -78,14 +82,13 @@ var ViewScreen = (function () {
         cell.appendChild(transTd);
         cell.addEventListener("click", this.editWord.bind({
             lines: this.lines,
-            record: record,
-            origTd: origTd,
-            analysisTd: analysisTd,
-            transTd: transTd
+            record,
+            origTd,
+            analysisTd,
+            transTd
         }));
-    };
-    ViewScreen.prototype._editWord = function () {
-        var _this = this;
+    }
+    _editWord() {
         var dialog = new EditDialog({
             action: location.href,
             method: "get",
@@ -109,18 +112,17 @@ var ViewScreen = (function () {
                     value: this.record.trans
                 }]
         });
-        dialog.onabort = function () { return dialog.hide(); };
-        dialog.onsubmit = function (event, record) {
-            _this.origTd.textContent = _this.record.orig = record[0].value;
-            _this.record.analysis = record[1].value;
-            _this.analysisTd.innerHTML = richtext(_this.record.analysis);
-            _this.transTd.textContent = _this.record.trans = record[2].value;
+        dialog.onabort = () => dialog.hide();
+        dialog.onsubmit = (event, record) => {
+            this.origTd.textContent = this.record.orig = record[0].value;
+            this.record.analysis = record[1].value;
+            this.analysisTd.innerHTML = richtext(this.record.analysis);
+            this.transTd.textContent = this.record.trans = record[2].value;
             dialog.hide();
         };
         dialog.show();
-    };
-    ViewScreen.prototype._editTranslation = function () {
-        var _this = this;
+    }
+    _editTranslation() {
         var dialog = new EditDialog({
             action: location.href,
             method: "get",
@@ -132,18 +134,17 @@ var ViewScreen = (function () {
                     value: this.line.trans
                 }]
         });
-        dialog.onabort = function () { return dialog.hide(); };
-        dialog.onsubmit = function (event, record) {
-            _this.translationLine.textContent = _this.line.trans = record[0].value;
+        dialog.onabort = () => dialog.hide();
+        dialog.onsubmit = (event, record) => {
+            this.translationLine.textContent = this.line.trans = record[0].value;
             dialog.hide();
         };
         dialog.show();
-    };
-    ViewScreen.prototype.save = function () {
+    }
+    save() {
         localStorage.setItem("analysis-" + this.$title, JSON.stringify(this.$lines));
-    };
-    return ViewScreen;
-}());
+    }
+}
 try {
     var title = decodeURIComponent(location.search.replace("?title=", "").replace(/\+/g, " "));
     if (title && localStorage.getItem("analysis-" + title)) {
@@ -159,7 +160,7 @@ try {
             abortButton: "Create new",
             submitButton: "View selected"
         });
-        dialog.onabort = function (event) { return location.href = "create.html"; };
+        dialog.onabort = event => location.href = "create.html";
         dialog.show();
     }
 }

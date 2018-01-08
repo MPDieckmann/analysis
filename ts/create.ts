@@ -135,7 +135,7 @@ class CreateScreen {
 
   private _getText() {
     var text: AnalysisTable = {
-      dir: this.$langSelect.value == "orig" ? "rtl" : "ltr",
+      dir: this.$langSelect.value == "hbo" ? "rtl" : "ltr",
       lang: this.$langSelect.value
     };
 

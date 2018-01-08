@@ -1,25 +1,29 @@
-var ViewScreen = (function () {
-    function ViewScreen(title) {
-        var _this = this;
+/// <reference path="../ts/interfaces.d.ts" />
+/// <reference path="../ts/edit.ts" />
+class ViewScreen {
+    constructor(title) {
+        // #region initialize components
+        // initialize element
         this.element = document.createElement("table");
         this.element.classList.add("screen", "view-screen");
+        // #endregion
         document.title = title + "- Analysis";
         this.$title = title;
         this.$lines = JSON.parse(localStorage.getItem("analysis-" + title));
         var lineNumbers = Object.keys(this.$lines);
         var length = 0;
         this.element.dir = this.$lines.dir;
-        lineNumbers.forEach(function (lineNumber) {
-            if (!isNaN(parseInt(lineNumber)) && _this.$lines[lineNumber].orig.length > length) {
-                length = _this.$lines[lineNumber].orig.length;
+        lineNumbers.forEach(lineNumber => {
+            if (!isNaN(parseInt(lineNumber)) && this.$lines[lineNumber].orig.length > length) {
+                length = this.$lines[lineNumber].orig.length;
             }
         });
-        lineNumbers.forEach(function (lineNumber) { return !isNaN(parseInt(lineNumber)) && _this._createLine(_this.$lines[lineNumber], lineNumber, length, _this.$lines); });
-        self.addEventListener("beforeunload", function () {
-            _this.save();
+        lineNumbers.forEach(lineNumber => !isNaN(parseInt(lineNumber)) && this._createLine(this.$lines[lineNumber], lineNumber, length, this.$lines));
+        self.addEventListener("beforeunload", () => {
+            this.save();
         });
     }
-    ViewScreen.prototype._createLine = function (line, lineNumber, length, lines) {
+    _createLine(line, lineNumber, length, lines) {
         var origLine = document.createElement("tr");
         origLine.classList.add("orig");
         this.element.appendChild(origLine);
@@ -48,7 +52,7 @@ var ViewScreen = (function () {
         translationCell.classList.add("trans");
         translationCell.textContent = line.trans;
         translationCell.colSpan = length;
-        translationCell.addEventListener("click", function () {
+        translationCell.addEventListener("click", () => {
             var dialog = new EditDialog({
                 action: location.href,
                 method: "get",
@@ -60,8 +64,8 @@ var ViewScreen = (function () {
                         value: line.trans
                     }]
             });
-            dialog.onabort = function () { return dialog.hide(); };
-            dialog.onsubmit = function (event, record) {
+            dialog.onabort = () => dialog.hide();
+            dialog.onsubmit = (event, record) => {
                 translationCell.textContent = line.trans = record[0].value;
                 dialog.hide();
             };
@@ -88,29 +92,28 @@ var ViewScreen = (function () {
                 var rec = line.orig[index];
                 origTd.textContent = rec.orig;
                 origTd.addEventListener("click", editWord.bind(null, {
-                    rec: rec,
-                    origTd: origTd,
-                    analysisTd: analysisTd,
-                    transTd: transTd
+                    rec,
+                    origTd,
+                    analysisTd,
+                    transTd
                 }));
                 analysisTd.textContent = rec.analysis;
                 analysisTd.addEventListener("click", editWord.bind(null, {
-                    rec: rec,
-                    origTd: origTd,
-                    analysisTd: analysisTd,
-                    transTd: transTd
+                    rec,
+                    origTd,
+                    analysisTd,
+                    transTd
                 }));
                 transTd.textContent = rec.trans;
                 transTd.addEventListener("click", editWord.bind(null, {
-                    rec: rec,
-                    origTd: origTd,
-                    analysisTd: analysisTd,
-                    transTd: transTd
+                    rec,
+                    origTd,
+                    analysisTd,
+                    transTd
                 }));
             }
         }
-        function editWord(_a) {
-            var rec = _a.rec, origTd = _a.origTd, analysisTd = _a.analysisTd, transTd = _a.transTd;
+        function editWord({ rec, origTd, analysisTd, transTd }) {
             var dialog = new EditDialog({
                 action: location.href,
                 method: "get",
@@ -134,8 +137,8 @@ var ViewScreen = (function () {
                         value: rec.trans
                     }]
             });
-            dialog.onabort = function () { return dialog.hide(); };
-            dialog.onsubmit = function (event, record) {
+            dialog.onabort = () => dialog.hide();
+            dialog.onsubmit = (event, record) => {
                 origTd.textContent = rec.orig = record[0].value;
                 analysisTd.textContent = rec.analysis = record[1].value;
                 transTd.textContent = rec.trans = record[2].value;
@@ -143,12 +146,11 @@ var ViewScreen = (function () {
             };
             dialog.show();
         }
-    };
-    ViewScreen.prototype.save = function () {
+    }
+    save() {
         localStorage.setItem("analysis-" + this.$title, JSON.stringify(this.$lines));
-    };
-    return ViewScreen;
-}());
+    }
+}
 try {
     var title = decodeURIComponent(location.search.replace("?title=", "").replace(/\+/g, " "));
     if (title && localStorage.getItem("analysis-" + title)) {
@@ -164,7 +166,7 @@ try {
             abortButton: "Create new",
             submitButton: "View selected"
         });
-        dialog.onabort = function (event) { return location.href = "create.html"; };
+        dialog.onabort = event => location.href = "create.html";
         dialog.show();
     }
 }
